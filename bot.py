@@ -41,12 +41,12 @@ async def register(ctx, unique_id):
             owner = bot.get_user(owner_id)
             moderators = [member for member in ctx.guild.members if "Mod" in [role.name for role in member.roles]]
             notification_message = f"New registration request from {ctx.author.mention} with unique ID: {unique_id}."
-            
+
             # Send notifications
             await owner.send(notification_message)
             for moderator in moderators:
                 await moderator.send(notification_message)
-            
+
             # Move the user to the waiting channel
             waiting_channel = discord.utils.get(ctx.guild.text_channels, name=waiting_channel_name)
             if waiting_channel:
