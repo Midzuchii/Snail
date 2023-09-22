@@ -170,21 +170,33 @@ async def ban(ctx, member: discord.Member, *, reason=None):
 
 import aiohttp
 
-@bot.command()
 async def ping(ctx):
     try:
-        start_time = datetime.datetime.utcnow()
-        async with aiohttp.ClientSession() as session:
-            await ctx.send("Pinging lunaors.eu for 15 seconds...")
-            for _ in range(15):
+        # Define the number of pings and the delay between pings (in seconds)
+        num_pings = 10
+        ping_delay = 1  # 1 second delay between pings
+
+        total_latency = 0
+        for _ in range(num_pings):
+            start_time = datetime.datetime.utcnow()
+
+            async with aiohttp.ClientSession() as session:
                 async with session.get("https://lunaors.eu") as response:
                     if response.status == 200:
                         end_time = datetime.datetime.utcnow()
                         latency = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
+                        total_latency += latency
                         await ctx.send(f'Pong! Latency: {latency:.2f} ms')
                     else:
                         await ctx.send('Failed to ping the website.')
-                await asyncio.sleep(1)  # Wait for 1 second between pings
+
+            # Introduce a delay before the next ping
+            await asyncio.sleep(ping_delay)
+
+        # Calculate and send the average latency
+        average_latency = total_latency / num_pings
+        await ctx.send(f'Average Latency: {average_latency:.2f} ms')
+
     except Exception as e:
         await ctx.send(f'An error occurred: {e}')
 
