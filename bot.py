@@ -16,7 +16,7 @@ intents.message_content = True  # Enable the message content intent
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 bot.start_time = None
 owner_id = 270254006096494592  # Replace with your owner's user ID
-log_channel_id = 1154795053592612895  # Replace with your log channel ID
+log_channel_id = 1154795053592612895  # Replace with your standard log channel ID
 waiting_channel_name = "waiting"  # Replace with your waiting channel name
 registration_log_channel_id = 1154811703125627012  # Replace with your registration log channel ID
 
@@ -39,15 +39,10 @@ async def on_ready():
 async def register(ctx, unique_id):
     # Check if the user is a moderator or the owner
     if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == owner_id:
-        # Log the registration request
-        log_channel = bot.get_channel(log_channel_id)
-        registration_log_channel = bot.get_channel(registration_log_channel_id)  # Replace with your registration log channel ID
-
-        if log_channel and registration_log_channel:
+        # Log the registration request in the registration log channel
+        registration_log_channel = bot.get_channel(registration_log_channel_id)
+        if registration_log_channel:
             log_message = f"Registration request from {ctx.author.name} (ID: {ctx.author.id}) with unique ID: {unique_id}"
-            await log_channel.send(log_message)
-
-            # Send registration log to the registration log channel
             await registration_log_channel.send(log_message)
 
             # Notify moderators and owner
@@ -66,9 +61,9 @@ async def register(ctx, unique_id):
                 await ctx.author.move_to(waiting_channel)
                 await ctx.send(f"Registration request sent for approval. You are now in the {waiting_channel.mention} channel.")
             else:
-                await ctx.send("Registration log channel not found. Please set it up.")
+                await ctx.send("Waiting channel not found. Please set it up.")
         else:
-            await ctx.send("Registration log channels not found. Please set them up.")
+            await ctx.send("Registration log channel not found. Please set it up.")
     else:
         await ctx.send("Only moderators and the owner can register users.")
 
@@ -76,14 +71,28 @@ async def register(ctx, unique_id):
 async def approve(ctx, user: discord.Member):
     if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == owner_id:
         # Add your approval logic here
-        # Log the approval action if needed
-        await ctx.send(f"Approved user {user.name}.")
+        # Log the approval action in the standard log channel
+        log_channel = bot.get_channel(log_channel_id)
+        if log_channel:
+            log_message = f"Approved user {user.name}."
+            await log_channel.send(log_message)
+        else:
+            print("Standard log channel not found. Please set it up.")
+
+        await ctx.send(log_message)
     else:
         await ctx.send("Only moderators and the owner can approve users.")
 
 @bot.command()
 async def feedback(ctx, *, message):
-    print(f"Feedback received from {ctx.author.name}: {message}")
+    # Log the feedback message in the standard log channel
+    log_channel = bot.get_channel(log_channel_id)
+    if log_channel:
+        log_message = f"Feedback received from {ctx.author.name}: {message}"
+        await log_channel.send(log_message)
+    else:
+        print("Standard log channel not found. Please set it up.")
+
     await ctx.send("Thank you for your feedback!")
 
 @bot.command()
