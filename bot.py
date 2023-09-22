@@ -11,6 +11,7 @@ PREFIX = "!"
 intents = discord.Intents.default()
 intents.typing = False  # Disable typing notifications, if desired
 intents.presences = False  # Disable presence updates, if desired
+intents.message_content = True  # Enable the message content intent
 
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 bot.start_time = None
