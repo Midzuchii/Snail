@@ -20,6 +20,9 @@ log_channel_id = 1154795053592612895  # Replace with your standard log channel I
 waiting_channel_id = 1154816815273357384  # Replace with your waiting channel ID
 registration_log_channel_id = 1154811703125627012  # Replace with your registration log channel ID
 
+# Dictionary to store user registration data
+user_registrations = {}
+
 @bot.event
 async def on_ready():
     bot.start_time = datetime.datetime.utcnow()
@@ -55,6 +58,9 @@ async def register(ctx, unique_id):
             for moderator in moderators:
                 await moderator.send(notification_message)
 
+            # Store user registration data
+            user_registrations[ctx.author.id] = unique_id
+
             # Move the user to the waiting channel (text channel)
             waiting_channel = bot.get_channel(waiting_channel_id)
             if waiting_channel:
@@ -70,16 +76,25 @@ async def register(ctx, unique_id):
 @bot.command()
 async def approve(ctx, user: discord.Member):
     if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == owner_id:
-        # Add your approval logic here
-        # Log the approval action in the standard log channel
-        log_channel = bot.get_channel(log_channel_id)
-        if log_channel:
-            log_message = f"Approved user {user.name}."
-            await log_channel.send(log_message)
-        else:
-            print("Standard log channel not found. Please set it up.")
+        # Check if the user has a registration
+        if user.id in user_registrations:
+            unique_id = user_registrations[user.id]
 
-        await ctx.send(log_message)
+            # Add your approval logic here
+            # Log the approval action in the standard log channel
+            log_channel = bot.get_channel(log_channel_id)
+            if log_channel:
+                log_message = f"Approved user {user.name}. Unique ID: {unique_id}"
+                await log_channel.send(log_message)
+            else:
+                print("Standard log channel not found. Please set it up.")
+
+            # Remove the user's registration data
+            del user_registrations[user.id]
+
+            await ctx.send(log_message)
+        else:
+            await ctx.send("This user doesn't have a pending registration.")
     else:
         await ctx.send("Only moderators and the owner can approve users.")
 
@@ -103,5 +118,17 @@ async def uptime(ctx):
         await ctx.send(f"Bot uptime: {uptime_str}")
     else:
         await ctx.send("Bot start time not set. Bot may not be ready yet.")
+
+@bot.command()
+async def help(ctx):
+    # Provide information about available commands
+    help_message = (
+        "Available commands:\n"
+        "!register [unique_id] - Register a user with a unique ID (for moderators and owner).\n"
+        "!approve [user_mention] - Approve a registered user (for moderators and owner).\n"
+        "!feedback [message] - Send feedback to the bot owner.\n"
+        "!uptime - Display bot uptime.\n"
+    )
+    await ctx.send(help_message)
 
 bot.run(TOKEN)
