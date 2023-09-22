@@ -3,6 +3,8 @@ from discord.ext import commands
 import datetime
 from decouple import config
 import aiohttp
+import asyncio
+
 TOKEN = config('TOKEN')
 PREFIX = "!"
 
