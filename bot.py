@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 bot.start_time = None
 owner_id = 270254006096494592  # Replace with your owner's user ID
 log_channel_id = 1154795053592612895  # Replace with your standard log channel ID
-waiting_channel_name = "waiting"  # Replace with your waiting channel name
+waiting_channel_name = "request"  # Replace with your waiting channel name
 registration_log_channel_id = 1154811703125627012  # Replace with your registration log channel ID
 
 @bot.event
