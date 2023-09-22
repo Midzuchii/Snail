@@ -27,7 +27,7 @@ async def on_ready():
     # Set the bot's status to "online"
     await bot.change_presence(status=discord.Status.online)
 
-    owner = bot.get_user(owner_id)
+    owner = await bot.fetch_user(owner_id)  # Fetch the owner's user object
     if owner:
         notification_message = "Bot is now online and ready."
         await owner.send(notification_message)
@@ -45,7 +45,7 @@ async def register(ctx, unique_id):
             await log_channel.send(log_message)
 
             # Notify moderators and owner
-            owner = bot.get_user(owner_id)
+            owner = await bot.fetch_user(owner_id)  # Fetch the owner's user object
             moderators = [member for member in ctx.guild.members if "Mod" in [role.name for role in member.roles]]
             notification_message = f"New registration request from {ctx.author.mention} with unique ID: {unique_id}."
 
