@@ -18,6 +18,7 @@ bot.start_time = None
 owner_id = 270254006096494592  # Replace with your owner's user ID
 log_channel_id = 1154795053592612895  # Replace with your log channel ID
 waiting_channel_name = "waiting"  # Replace with your waiting channel name
+registration_log_channel_id = 123456789012345678  # Replace with your registration log channel ID
 
 @bot.event
 async def on_ready():
@@ -40,9 +41,14 @@ async def register(ctx, unique_id):
     if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == owner_id:
         # Log the registration request
         log_channel = bot.get_channel(log_channel_id)
-        if log_channel:
+        registration_log_channel = bot.get_channel(registration_log_channel_id)  # Replace with your registration log channel ID
+
+        if log_channel and registration_log_channel:
             log_message = f"Registration request from {ctx.author.name} (ID: {ctx.author.id}) with unique ID: {unique_id}"
             await log_channel.send(log_message)
+
+            # Send registration log to the registration log channel
+            await registration_log_channel.send(log_message)
 
             # Notify moderators and owner
             owner = await bot.fetch_user(owner_id)  # Fetch the owner's user object
@@ -62,7 +68,7 @@ async def register(ctx, unique_id):
             else:
                 await ctx.send("Registration log channel not found. Please set it up.")
         else:
-            await ctx.send("Registration log channel not found. Please set it up.")
+            await ctx.send("Registration log channels not found. Please set them up.")
     else:
         await ctx.send("Only moderators and the owner can register users.")
 
