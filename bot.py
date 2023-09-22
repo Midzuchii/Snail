@@ -168,8 +168,7 @@ async def ban(ctx, member: discord.Member, *, reason=None):
     else:
         await ctx.send("You don't have permission to ban members.")
 
-import aiohttp
-
+@bot.command()
 async def ping(ctx):
     try:
         # Define the number of pings and the delay between pings (in seconds)
