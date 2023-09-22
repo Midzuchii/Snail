@@ -33,6 +33,18 @@ async def on_ready():
     else:
         print(f"Owner with ID {owner_id} not found or unavailable.")
 
+@bot.event
+async def on_ready():
+    bot.start_time = datetime.datetime.utcnow()
+    print(f'Logged in as {bot.user.name} ({bot.user.id})')
+    await bot.change_presence(status=discord.Status.online)
+    owner = await bot.fetch_user(owner_id)
+    if owner:
+        notification_message = "Bot is now online and ready."
+        await owner.send(notification_message)
+    else:
+        print(f"Owner with ID {owner_id} not found or unavailable.")
+
 @bot.command()
 async def register(ctx, unique_id):
     if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == owner_id:
