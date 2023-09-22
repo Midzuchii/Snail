@@ -19,12 +19,6 @@ owner_id = 270254006096494592  # Replace with your owner's user ID
 log_channel_id = 1154795053592612895  # Replace with your log channel ID
 waiting_channel_name = "waiting"  # Replace with your waiting channel name
 
-owner = bot.get_user(owner_id)
-if owner:
-    await owner.send(notification_message)
-else:
-    print(f"Owner with ID {owner_id} not found or unavailable.")
-
 @bot.event
 async def on_ready():
     bot.start_time = datetime.datetime.utcnow()
