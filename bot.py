@@ -31,8 +31,6 @@ async def register(ctx, unique_id):
     owner_role = discord.utils.get(ctx.guild.roles, name="Owner")
 
     if mod_role in ctx.author.roles or owner_role in ctx.author.roles:
-        # Rest of your code for registration
-        # ...
     else:
         await ctx.send("Only moderators and the owner can register users.")
 
@@ -43,8 +41,6 @@ async def approve(ctx, user: discord.Member):
     owner_role = discord.utils.get(ctx.guild.roles, name="Owner")
 
     if mod_role in ctx.author.roles or owner_role in ctx.author.roles:
-        # Rest of your code for approval
-        # ...
     else:
         await ctx.send("Only moderators and the owner can approve users.")
 
