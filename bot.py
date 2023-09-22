@@ -119,6 +119,21 @@ async def shelp(ctx):
     await ctx.send(help_message)
 
 @bot.command()
+async def ping(ctx):
+    try:
+        start_time = datetime.datetime.utcnow()
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://lunaors.eu") as response:
+                if response.status == 200:
+                    end_time = datetime.datetime.utcnow()
+                    latency = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
+                    await ctx.send(f'Pong! Latency: {latency:.2f} ms')
+                else:
+                    await ctx.send('Failed to ping the website.')
+    except Exception as e:
+        await ctx.send(f'An error occurred: {e}')
+
+@bot.command()
 async def mute(ctx, member: discord.Member, duration=None, *, reason=None):
     if ctx.author.guild_permissions.manage_roles:
         mute_role = discord.utils.get(ctx.guild.roles, name="Silly Snail")
