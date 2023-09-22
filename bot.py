@@ -150,7 +150,7 @@ async def purge(ctx, amount: int):
     else:
         await ctx.send("You don't have permission to manage messages.")
         
-        @bot.command()
+@bot.command()
 async def kick(ctx, member: discord.Member, *, reason=None):
     if ctx.author.guild_permissions.kick_members:
         await member.kick(reason=reason)
