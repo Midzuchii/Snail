@@ -35,7 +35,7 @@ async def register(ctx, unique_id):
             await log_channel.send(log_message)
 
             # Notify moderators and owner
-            owner = ctx.guild.get_member(YOUR_OWNER_ID)  # Replace with your owner's user ID
+            owner = ctx.guild.get_member(270254006096494592)  # Replace with your owner's user ID
             moderators = [member for member in ctx.guild.members if "Mod" in [role.name for role in member.roles]]
             notification_message = f"New registration request from {ctx.author.mention} with unique ID: {unique_id}."
             
