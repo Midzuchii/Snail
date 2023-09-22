@@ -117,6 +117,8 @@ async def shelp(ctx):
         "!approve [user_mention] - Approve a registered user (for moderators and owner).\n"
         "!feedback [message] - Send feedback to the bot owner.\n"
         "!uptime - Display bot uptime.\n"
+        "!ping - Test latency to selected site\n"
+        "!purge - removes chat dialogue\n"
     )
     await ctx.send(help_message)
 
