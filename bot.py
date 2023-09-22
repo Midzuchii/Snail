@@ -33,6 +33,13 @@ async def on_ready():
     # Set the bot's status to "online"
     await bot.change_presence(status=discord.Status.online)
 
+    owner = bot.get_user(owner_id)
+    if owner:
+        notification_message = "Bot is now online and ready."
+        await owner.send(notification_message)
+    else:
+        print(f"Owner with ID {owner_id} not found or unavailable.")
+
 @bot.command()
 async def register(ctx, unique_id):
     # Check if the user is a moderator or the owner
