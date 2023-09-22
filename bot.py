@@ -55,10 +55,10 @@ async def register(ctx, unique_id):
             for moderator in moderators:
                 await moderator.send(notification_message)
 
-            # Move the user to the waiting channel
+            # Move the user to the waiting channel (text channel)
             waiting_channel = bot.get_channel(waiting_channel_id)
             if waiting_channel:
-                await ctx.author.move_to(waiting_channel)
+                await ctx.author.move_to(None)  # Move to the text channel, not a voice channel
                 await ctx.send(f"Registration request sent for approval. You are now in the {waiting_channel.mention} channel.")
             else:
                 await ctx.send("Waiting channel not found. Please set it up.")
