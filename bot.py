@@ -1,12 +1,18 @@
-import os
 import discord
 from discord.ext import commands
 import datetime
 from decouple import config
 
+# Use the `config` function from decouple to read the TOKEN from the .env file
 TOKEN = config('TOKEN')
 PREFIX = "!"
-bot = commands.Bot(command_prefix=PREFIX)
+
+# Define your bot's intents
+intents = discord.Intents.default()
+intents.typing = False  # Disable typing notifications, if desired
+intents.presences = False  # Disable presence updates, if desired
+
+bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 bot.start_time = None
 
 @bot.event
