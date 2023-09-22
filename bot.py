@@ -27,7 +27,7 @@ async def on_ready():
 @bot.command()
 async def register(ctx, unique_id):
     # Check if the user is a moderator or the owner
-    if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == YOUR_OWNER_ID:
+    if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == 270254006096494592:
         # Log the registration request
         log_channel = ctx.guild.get_channel(1154795053592612895)  # Replace with your log channel ID
         if log_channel:
