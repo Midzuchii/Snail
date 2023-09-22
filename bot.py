@@ -18,7 +18,7 @@ bot.start_time = None
 owner_id = 270254006096494592  # Replace with your owner's user ID
 log_channel_id = 1154795053592612895  # Replace with your log channel ID
 waiting_channel_name = "waiting"  # Replace with your waiting channel name
-registration_log_channel_id = 123456789012345678  # Replace with your registration log channel ID
+registration_log_channel_id = 1154811703125627012  # Replace with your registration log channel ID
 
 @bot.event
 async def on_ready():
