@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import datetime
 from decouple import config
-
+import aiohttp
 TOKEN = config('TOKEN')
 PREFIX = "!"
 
@@ -119,21 +119,6 @@ async def shelp(ctx):
     await ctx.send(help_message)
 
 @bot.command()
-async def ping(ctx):
-    try:
-        start_time = datetime.datetime.utcnow()
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://lunaors.eu") as response:
-                if response.status == 200:
-                    end_time = datetime.datetime.utcnow()
-                    latency = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
-                    await ctx.send(f'Pong! Latency: {latency:.2f} ms')
-                else:
-                    await ctx.send('Failed to ping the website.')
-    except Exception as e:
-        await ctx.send(f'An error occurred: {e}')
-
-@bot.command()
 async def mute(ctx, member: discord.Member, duration=None, *, reason=None):
     if ctx.author.guild_permissions.manage_roles:
         mute_role = discord.utils.get(ctx.guild.roles, name="Silly Snail")
@@ -156,5 +141,49 @@ async def unmute(ctx, member: discord.Member):
             await ctx.send("The 'Silly Snail' mute role does not exist.")
     else:
         await ctx.send("You don't have permission to manage roles.")
+
+@bot.command()
+async def purge(ctx, amount: int):
+    if ctx.author.guild_permissions.manage_messages:
+        await ctx.channel.purge(limit=amount + 1)
+        await ctx.send(f"Purged {amount} messages.", delete_after=5)
+    else:
+        await ctx.send("You don't have permission to manage messages.")
+        
+        @bot.command()
+async def kick(ctx, member: discord.Member, *, reason=None):
+    if ctx.author.guild_permissions.kick_members:
+        await member.kick(reason=reason)
+        await ctx.send(f"{member.mention} has been kicked for the reason: {reason}.")
+    else:
+        await ctx.send("You don't have permission to kick members.")
+
+@bot.command()
+async def ban(ctx, member: discord.Member, *, reason=None):
+    if ctx.author.guild_permissions.ban_members:
+        await member.ban(reason=reason)
+        await ctx.send(f"{member.mention} has been banned for the reason: {reason}.")
+    else:
+        await ctx.send("You don't have permission to ban members.")
+
+import aiohttp
+
+@bot.command()
+async def ping(ctx):
+    try:
+        start_time = datetime.datetime.utcnow()
+        async with aiohttp.ClientSession() as session:
+            await ctx.send("Pinging lunaors.eu for 15 seconds...")
+            for _ in range(15):
+                async with session.get("https://lunaors.eu") as response:
+                    if response.status == 200:
+                        end_time = datetime.datetime.utcnow()
+                        latency = (end_time - start_time).total_seconds() * 1000  # Convert to milliseconds
+                        await ctx.send(f'Pong! Latency: {latency:.2f} ms')
+                    else:
+                        await ctx.send('Failed to ping the website.')
+                await asyncio.sleep(1)  # Wait for 1 second between pings
+    except Exception as e:
+        await ctx.send(f'An error occurred: {e}')
 
 bot.run(TOKEN)
