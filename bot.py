@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 bot.start_time = None
 owner_id = 270254006096494592  # Replace with your owner's user ID
 log_channel_id = 1154795053592612895  # Replace with your standard log channel ID
-waiting_channel_name = "pending"  # Replace with your waiting channel name
+waiting_channel_id = 1154816815273357384  # Replace with your waiting channel name
 registration_log_channel_id = 1154811703125627012  # Replace with your registration log channel ID
 
 @bot.event
@@ -56,7 +56,7 @@ async def register(ctx, unique_id):
                 await moderator.send(notification_message)
 
             # Move the user to the waiting channel
-            waiting_channel = discord.utils.get(ctx.guild.text_channels, name=waiting_channel_name)
+            waiting_channel = discord.utils.get(ctx.guild.text_channels, name=waiting_channel_id)
             if waiting_channel:
                 await ctx.author.move_to(waiting_channel)
                 await ctx.send(f"Registration request sent for approval. You are now in the {waiting_channel.mention} channel.")
