@@ -120,7 +120,7 @@ async def uptime(ctx):
         await ctx.send("Bot start time not set. Bot may not be ready yet.")
 
 @bot.command()
-async def help(ctx):
+async def shelp(ctx):
     # Provide information about available commands
     help_message = (
         "Available commands:\n"
