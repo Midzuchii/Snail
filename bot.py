@@ -4,18 +4,10 @@ from discord.ext import commands
 import datetime
 from decouple import config
 
-api_key = os.environ['asRuCUrqDVpAfmNUNRSynQaYC6xw6yFcTJbzCNpm']
 TOKEN = config('TOKEN')
 PREFIX = "!"
 bot = commands.Bot(command_prefix=PREFIX)
 bot.start_time = None
-
-# Check if the API key is set
-if api_key is None:
-    print("API_KEY environment variable is not set.")
-else:
-    print(f"API_KEY: {api_key}")
-
 
 @bot.event
 async def on_ready():
