@@ -26,19 +26,38 @@ async def on_ready():
 
 @bot.command()
 async def register(ctx, unique_id):
-    if "Mod" in [role.name for role in ctx.author.roles]:
-        await ctx.send(f"User {ctx.author.name} registered with Unique ID: {unique_id}")
+    # Check if the user is a moderator or the owner
+    if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == YOUR_OWNER_ID:
+        # Log the registration request
+        log_channel = ctx.guild.get_channel(1154795053592612895)  # Replace with your log channel ID
+        if log_channel:
+            log_message = f"Registration request from {ctx.author.name} (ID: {ctx.author.id}) with unique ID: {unique_id}"
+            await log_channel.send(log_message)
+
+            # Notify moderators and owner
+            owner = ctx.guild.get_member(YOUR_OWNER_ID)  # Replace with your owner's user ID
+            moderators = [member for member in ctx.guild.members if "Mod" in [role.name for role in member.roles]]
+            notification_message = f"New registration request from {ctx.author.mention} with unique ID: {unique_id}."
+            
+            # Send notifications
+            await owner.send(notification_message)
+            for moderator in moderators:
+                await moderator.send(notification_message)
+            
+            await ctx.send("Registration request sent for approval.")
+        else:
+            await ctx.send("Registration log channel not found. Please set it up.")
     else:
-        await ctx.send("Only moderators can register users.")
+        await ctx.send("Only moderators and the owner can register users.")
 
 @bot.command()
 async def approve(ctx, user: discord.Member):
-    if "Mod" in [role.name for role in ctx.author.roles]:
-        role = discord.utils.get(ctx.guild.roles, name="Super Snail")
-        await user.add_roles(role)
+    if "Mod" in [role.name for role in ctx.author.roles] or ctx.author.id == 270254006096494592:
+        # Add your approval logic here
+        # Log the approval action if needed
         await ctx.send(f"Approved user {user.name}.")
     else:
-        await ctx.send("Only moderators can approve users.")
+        await ctx.send("Only moderators and the owner can approve users.")
 
 @bot.command()
 async def feedback(ctx, *, message):
